@@ -55,6 +55,14 @@
   ],
   "description": "Нужно реализовать дерево прав доступа.",
   "main": "babel.config.js",
-  "author": "",
-  "license": "ISC"
+  "author": "LemonAid200",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LemonAid200/testing-task.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LemonAid200/testing-task/issues"
+  },
+  "homepage": "https://github.com/LemonAid200/testing-task#readme"
 }
