@@ -7,8 +7,23 @@
                 <div class="back"><img :src="mySVG" /> Назад</div>
                 <div class="title">Менеджер</div>
                 <div class="table">
-                    <div v-for="(elem, index) in cardsToDisplay" 
-                        :key="index" class="table-cards">{{elem}}</div>
+                    <div class="table-titles">
+                        <div v-for="(elem, index) in titlesToDisplay" 
+                            :key="index" class="table-title">{{elem}}
+                         </div>
+                    </div>
+                   
+                    <div class="table-line"></div>
+                    <div class="table-cards">
+                        <div v-for="(list, index) in listsToDisplay" 
+                            :key="index" class="table-list">
+                                <div v-for="item in list" 
+                                    :key="item.name"
+                                    class="table-list-item">
+                                    {{item.name}}                                    
+                                </div>
+                        </div>
+                    </div>
                 </div>
                 <button @click="createPermission" class="save-button">Сохранить</button>
             </div>
@@ -44,12 +59,27 @@
         mounted() {
             this.getTemplates()
             setTimeout(() =>  console.log(this.rootPermission), 1000)
-            setTimeout(() =>  console.log(this.rootPermissionTitles), 1000)
+            setTimeout(() =>  console.log(this.rootPermissionTitles['part1'].title), 1000)
 
         },
         computed: {
-            cardsToDisplay(){
-                return ['ssdfsdf','sdfsdfdsf','lskdflfdgjj']
+            titlesToDisplay(){
+                let array = []
+                // не работает потому что объект
+                for (let part in this.rootPermissionTitles){
+                    array.push(part.title)
+                }
+                return array
+            },
+
+            listsToDisplay(){
+                return [
+                        [   
+                            {name: 'штука', isChecked: false}, 
+                            {name: 'Дркгая штука', isChecked: true}
+                        ]
+                        
+                       ]
             }
 
         }
@@ -75,7 +105,6 @@
             border: 1px solid #DEE2E7;
             margin-top: 71px;
             margin-bottom: 24px;
-
         }
 
         .main-info{
@@ -126,14 +155,41 @@
             }
 
             .table{
-                display: flex;
                 min-height: 200px;
                 background: #FFFFFF;
                 box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
                 border-radius: 4px;
                 margin-top: 24px;
+
+                .table-titles{
+                    display: flex;
+                   
+                    .table-title{
+                        padding-left: 16px;
+                        padding-bottom: 9px;
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 13px;
+                        display: flex;
+                        align-items: flex-end;
+                        letter-spacing: 0.015em;
+                        color: #162133;
+                        height: 44px;
+                    }
+                }
+
+                .table-line{
+                    width: 100%;
+                    border: 1px solid #DEE2E7;
+                    margin-bottom: 24px;
+                }
                 .table-cards{
-                    width: fit-content;
+                    display: flex;
+                    height: 100%;
+                    .table-list{
+                        border: 1px solid #DEE2E7;
+
+                    }             
                 }
             }
         }
