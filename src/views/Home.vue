@@ -3,9 +3,16 @@
         <div class="sidebar"></div>
         <div class="main">
             <div class="line"></div>
-            <div class="title">Менеджер</div>
-            <div class="table" v-for="(part, key) in rootPermission" :key="key">{{part}}</div>
-            <button @click="createPermission" class="save-button">Сохранить</button>
+            <div class="main-info">
+                <div class="back"><img :src="mySVG" /> Назад</div>
+                <div class="title">Менеджер</div>
+                <div class="table">
+                    <div class="table-titles"></div>
+                    <div class="card-info"></div>
+                </div>
+                <button @click="createPermission" class="save-button">Сохранить</button>
+            </div>
+
         </div>
     </div>
 
@@ -17,8 +24,11 @@
 
     export default {
         name: 'Home',
+        components:{
+        },
         data() {
             return {
+                mySVG: require("../../public/icons/Vector.svg"),
                 rootPermission: {},
                 rootPermissionTitles: {}
             }
@@ -57,46 +67,62 @@
         width: 100%;
         .line{
             width: 100%;
-            // border: 1px solid #DEE2E7;
-            border: 1px solid red;
-            margin: 30px 0;
-
-        }
-        .save-button{
-            color: #FFFFFF;
-            background: #162133;
-            padding: 10px 16px;
-            border: 0px solid #162133;
-            border-radius: 4px;
-            /* font-family: 'Inter'; */
-            font-style: normal;
-            font-weight: 700;
-            font-size: 14px;
-            line-height: 20px;
-            /* identical to box height, or 143% */
-
-            letter-spacing: 0.015em;
+            border: 1px solid #DEE2E7;
+            margin-top: 71px;
+            margin-bottom: 24px;
 
         }
 
-        .title{
-            box-sizing: border-box;
-            width: 296px;
-            height: 40px;
-            background: #F3F5F7;
-            border-radius: 3px;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 20px;
-            line-height: 30px;
-            /* identical to box height, or 150% */
-            padding-left: 16px;
-            display: flex;
-            align-items: center;
+        .main-info{
+            padding-left: 25px;
 
-            /* Text/T1 */
+            .back{
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+                color: #3391F5;
+                margin: 24px 0;
+            }
+            .save-button{
+                color: #FFFFFF;
+                background: #162133;
+                padding: 10px 16px;
+                border: 0px solid #162133;
+                border-radius: 4px;
+                /* font-family: 'Inter'; */
+                font-style: normal;
+                font-weight: 700;
+                font-size: 14px;
+                line-height: 20px;
+                /* identical to box height, or 143% */
 
-            color: #162133;
+                letter-spacing: 0.015em;
+                margin: 24px;
+                position: absolute;
+                right: 0px;
+            }
+
+            .title{
+                box-sizing: border-box;
+                width: 296px;
+                height: 40px;
+                background: #F3F5F7;
+                border-radius: 3px;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 30px;
+                /* identical to box height, or 150% */
+                padding-left: 16px;
+                display: flex;
+                align-items: center;
+                color: #162133;                
+            }
+
+            .table{
+                height: 500px;
+            }
         }
     }
 }
