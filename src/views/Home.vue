@@ -22,7 +22,7 @@
                                     :key="key"
                                     class="table-list-item"
                                     :class="{
-                                        tableListItemSelected: key.isSelected
+                                        tableListItemSelected: key.isSelected && isEndOfBranch(key)
                                     }"
                                     >
                                    
@@ -66,7 +66,6 @@
         methods: {
             getTemplates() {
                 API.getTemplates().then(data => {
-                    // console.log(data.data.rootPermission)
                     this.rootPermission = data.data.rootPermission
                     this.rootPermissionTitles = data.data.rootPermissionTitles
                     let obj = {}
@@ -74,7 +73,6 @@
                         obj[name] = { name: name, isSelected: false }
                     }
                     this.rootToDisplay.push(obj)
-                    // console.log(this.rootToDisplay)
                 })
             },
             createPermission() {
@@ -92,13 +90,20 @@
                     return this.getObjectValueByKeys(keys, obj[key])
                 }            
             },
+
+            isEndOfBranch(key){
+                let obj = this.getObjectValueByKeys(this.selectedKeys, this.rootPermission)
+                console.log(Object.keys(obj))
+                console.log(key)
+
+                return Object.keys(obj).length > 0 
+
+            },
             
             handleItemClick(index, key){
-                // let selected = {name: key.name, index: index}
                 if (this.selectedKeys.length <= index + 1 || (this.selectedKeys[index] != key.name)){
                     this.selectedKeys = this.selectedKeys.slice(0, index)
                     this.selectedKeys.push(key.name)
-                    console.log(key.name)
 
                     this.rootToDisplay = this.rootToDisplay.slice(0, this.selectedKeys.length)
                     let objToPush = {}
