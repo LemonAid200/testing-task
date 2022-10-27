@@ -71,7 +71,7 @@
                         html.classList.add('modals-open');
                         return;
                     }
-                    html.classList.remove('modals-open')
+                    html.classList.remove('modals-open')                    
                 },
             }
         },
@@ -83,6 +83,7 @@
         },
         mounted() {
             document.addEventListener("keyup", this.keyUpHandler);
+            console.log(this.modals)
         },
         unmounted() {
             document.removeEventListener("keyup", this.keyUpHandler);

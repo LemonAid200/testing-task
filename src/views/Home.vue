@@ -7,8 +7,8 @@
                 <div class="back"><img :src="mySVG" /> Назад</div>
                 <div class="title">Менеджер</div>
                 <div class="table">
-                    <div class="table-titles"></div>
-                    <div class="card-info"></div>
+                    <div v-for="(elem, index) in cardsToDisplay" 
+                        :key="index" class="table-cards">{{elem}}</div>
                 </div>
                 <button @click="createPermission" class="save-button">Сохранить</button>
             </div>
@@ -30,7 +30,7 @@
             return {
                 mySVG: require("../../public/icons/Vector.svg"),
                 rootPermission: {},
-                rootPermissionTitles: {}
+                rootPermissionTitles: {},
             }
         },
         methods: {
@@ -44,8 +44,13 @@
         mounted() {
             this.getTemplates()
             setTimeout(() =>  console.log(this.rootPermission), 1000)
+            setTimeout(() =>  console.log(this.rootPermissionTitles), 1000)
+
         },
-        watch: {
+        computed: {
+            cardsToDisplay(){
+                return ['ssdfsdf','sdfsdfdsf','lskdflfdgjj']
+            }
 
         }
     }
@@ -121,7 +126,15 @@
             }
 
             .table{
-                height: 500px;
+                display: flex;
+                min-height: 200px;
+                background: #FFFFFF;
+                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+                border-radius: 4px;
+                margin-top: 24px;
+                .table-cards{
+                    width: fit-content;
+                }
             }
         }
     }
