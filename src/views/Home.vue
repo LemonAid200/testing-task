@@ -4,7 +4,7 @@
         <div class="main">
             <div class="line"></div>
             <div class="main-info">
-                <div class="back"><img :src="mySVG" /> Назад</div>
+                <div class="back"><img :src="arrowLeftBlue" /> Назад</div>
                 <div class="title">Менеджер</div>
                 <div class="table">
                     <div class="table-titles">
@@ -13,14 +13,15 @@
                          </div>
                     </div>
                    
-                    <div class="table-line"></div>
                     <div class="table-cards">
                         <div v-for="(list, index) in listsToDisplay" 
-                            :key="index" class="table-list">
-                                <div v-for="item in list" 
-                                    :key="item.name"
+                            :key="index" class="table-list"
+                            >
+                                <div v-for="key in list" 
+                                    @click="handleItemClick(index, key)"
+                                    :key="key"
                                     class="table-list-item">
-                                    {{item.name}}                                    
+                                      <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
                                 </div>
                         </div>
                     </div>
@@ -43,9 +44,12 @@
         },
         data() {
             return {
-                mySVG: require("../../public/icons/Vector.svg"),
+                arrowLeftBlue: require("../../public/icons/Vector.svg"),
+                arrowRightGrey: require("../../public/icons/Vector2.svg"),
+                
                 rootPermission: {},
                 rootPermissionTitles: {},
+                selectedKeys: []
             }
         },
         methods: {
@@ -54,32 +58,36 @@
             },
             createPermission() {
                 API.createPermission()
+            },
+            
+            handleItemClick(...w){
+                console.log(w[0], w[1].name)
             }
         },
+
         mounted() {
             this.getTemplates()
             setTimeout(() =>  console.log(this.rootPermission), 1000)
-            setTimeout(() =>  console.log(this.rootPermissionTitles['part1'].title), 1000)
+            // setTimeout(() =>  console.log(this.rootPermissionTitles['part1'].title), 1000)
 
         },
         computed: {
             titlesToDisplay(){
                 let array = []
-                // не работает потому что объект
-                for (let part in this.rootPermissionTitles){
-                    array.push(part.title)
+                
+                for (let key in this.rootPermissionTitles){
+                    array.push(this.rootPermissionTitles[key].title)
                 }
                 return array
             },
 
             listsToDisplay(){
-                return [
-                        [   
-                            {name: 'штука', isChecked: false}, 
-                            {name: 'Дркгая штука', isChecked: true}
-                        ]
-                        
-                       ]
+               let obj = {}
+               for (let name in this.rootPermission){
+                    obj[name] = {name: name, isChecked: false, isChosen: false}
+                }
+
+               return [obj]
             }
 
         }
@@ -163,6 +171,9 @@
 
                 .table-titles{
                     display: flex;
+                    width: 100%;
+                    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+
                    
                     .table-title{
                         padding-left: 16px;
@@ -175,20 +186,42 @@
                         letter-spacing: 0.015em;
                         color: #162133;
                         height: 44px;
+
                     }
                 }
 
-                .table-line{
-                    width: 100%;
-                    border: 1px solid #DEE2E7;
-                    margin-bottom: 24px;
-                }
                 .table-cards{
                     display: flex;
                     height: 100%;
                     .table-list{
+                        margin: 0;
                         border: 1px solid #DEE2E7;
+                        height: 90%;
 
+                        .table-list-item{
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 14px;
+                            line-height: 20px;
+                            color: #162133;
+                            height: 36px;
+                            padding-left: 12px;
+                            padding-right: 6px;
+                            cursor: pointer;
+                            display: flex;
+                            position: relative;
+
+                                p{
+                                    margin-right: 10px;
+                                }
+                                .arrow-right{
+                                    width: 7px;
+                                    height: 10px;
+                                    position: absolute;
+                                    right: 3%;
+                                    top: 50%;
+                                }                     
+                        }
                     }             
                 }
             }
