@@ -80,36 +80,57 @@
             createPermission() {
                 API.createPermission()
             },
+
+            getObjectValueByKeys(keys, obj){
+
+                if (keys.length <= 1) {
+                    return obj[keys[0]]
+                }
+                else {
+                    let key = keys[0]
+                    keys = keys.slice(1)
+                    return this.getObjectValueByKeys(keys, obj[key])
+                }            
+            },
             
             handleItemClick(index, key){
-                console.log(index)
+                // let selected = {name: key.name, index: index}
+                if (this.selectedKeys.length <= index + 1 || (this.selectedKeys[index] != key.name)){
+                    this.selectedKeys = this.selectedKeys.slice(0, index)
+                    this.selectedKeys.push(key.name)
+                    console.log(key.name)
+
+                    this.rootToDisplay = this.rootToDisplay.slice(0, this.selectedKeys.length)
+                    let objToPush = {}
+                    let rootObj = {}
+                    rootObj = this.getObjectValueByKeys(this.selectedKeys, this.rootPermission)
+                    
+                    for (let name in rootObj){
+                        objToPush[name] = { name: name, isSelected: false }
+                    }
+                    this.rootToDisplay.push(objToPush)
+                    
+                    
+                }
+
                 for (let i in this.rootToDisplay[index]){
+
                     if ( this.rootToDisplay[index][i].name != key.name ){
                             this.rootToDisplay[index][i].isSelected = false
                         }
                     else if (this.rootToDisplay[index][i].name == key.name){
                         this.rootToDisplay[index][i].isSelected = true
-                        if (index < this.selectedKeys.length){
-                            this.rootToDisplay = this.rootToDisplay[0] + this.rootToDisplay.slice(0, index )                        
-                        }
-
-                        this.selectedKeys.push(key.name)
-
-                        if (this.rootToDisplay.length > this.selectedKeys.length){
-                            this.rootToDisplay.push(this.rootPermission[key.name])
-                        }
-                        break
                     }
-                
-
                 }
+
+                
                 
             },
         },
 
         watch: {
             selectedKeys(){
-                console.log(this.selectedKeys)
+                // console.log(this.selectedKeys)
             }
         },
 
