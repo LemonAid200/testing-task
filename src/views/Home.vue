@@ -14,14 +14,21 @@
                     </div>
                    
                     <div class="table-cards">
-                        <div v-for="(list, index) in listsToDisplay" 
+                        <div v-for="(list, index) in rootToDisplay" 
                             :key="index" class="table-list"
                             >
                                 <div v-for="key in list" 
                                     @click="handleItemClick(index, key)"
                                     :key="key"
-                                    class="table-list-item">
-                                      <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
+                                    class="table-list-item"
+                                    :class="{
+                                        tableListItemSelected: key.isSelected
+                                    }"
+                                    >
+                                   
+                                    <img :src="key.isSelected ? checkedBox : notCheckedBox" 
+                                        class="checkBox">   
+                                    <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
                                 </div>
                         </div>
                     </div>
@@ -46,49 +53,83 @@
             return {
                 arrowLeftBlue: require("../../public/icons/Vector.svg"),
                 arrowRightGrey: require("../../public/icons/Vector2.svg"),
+                notCheckedBox: require("../../public/icons/CheckBoxNotChecked.svg"),
+                checkedBox: require("../../public/icons/CheckBoxChecked.svg"),
+
                 
                 rootPermission: {},
                 rootPermissionTitles: {},
+                rootToDisplay: [],
                 selectedKeys: []
             }
         },
         methods: {
             getTemplates() {
-                API.getTemplates().then(data => {this.rootPermission = data.data.rootPermission, this.rootPermissionTitles = data.data.rootPermissionTitles})
+                API.getTemplates().then(data => {
+                    // console.log(data.data.rootPermission)
+                    this.rootPermission = data.data.rootPermission
+                    this.rootPermissionTitles = data.data.rootPermissionTitles
+                    let obj = {}
+                    for (let name in data.data.rootPermission){
+                        obj[name] = { name: name, isSelected: false }
+                    }
+                    this.rootToDisplay.push(obj)
+                    // console.log(this.rootToDisplay)
+                })
             },
             createPermission() {
                 API.createPermission()
             },
             
-            handleItemClick(...w){
-                console.log(w[0], w[1].name)
+            handleItemClick(index, key){
+                console.log(index)
+                for (let i in this.rootToDisplay[index]){
+                    if ( this.rootToDisplay[index][i].name != key.name ){
+                            this.rootToDisplay[index][i].isSelected = false
+                        }
+                    else if (this.rootToDisplay[index][i].name == key.name){
+                        this.rootToDisplay[index][i].isSelected = true
+                        if (index < this.selectedKeys.length){
+                            this.rootToDisplay = this.rootToDisplay[0] + this.rootToDisplay.slice(0, index )                        
+                        }
+
+                        this.selectedKeys.push(key.name)
+
+                        if (this.rootToDisplay.length > this.selectedKeys.length){
+                            this.rootToDisplay.push(this.rootPermission[key.name])
+                        }
+                        break
+                    }
+                
+
+                }
+                
+            },
+        },
+
+        watch: {
+            selectedKeys(){
+                console.log(this.selectedKeys)
             }
         },
 
         mounted() {
             this.getTemplates()
-            setTimeout(() =>  console.log(this.rootPermission), 1000)
+            // setTimeout(() =>  console.log(this.rootPermission), 1000)
             // setTimeout(() =>  console.log(this.rootPermissionTitles['part1'].title), 1000)
 
         },
         computed: {
             titlesToDisplay(){
                 let array = []
-                
+                let i = 0
                 for (let key in this.rootPermissionTitles){
+                    if (i >= this.rootToDisplay.length) return array
                     array.push(this.rootPermissionTitles[key].title)
+                    i++
                 }
                 return array
             },
-
-            listsToDisplay(){
-               let obj = {}
-               for (let name in this.rootPermission){
-                    obj[name] = {name: name, isChecked: false, isChosen: false}
-                }
-
-               return [obj]
-            }
 
         }
     }
@@ -193,6 +234,8 @@
                 .table-cards{
                     display: flex;
                     height: 100%;
+                    overflow-x: auto;
+
                     .table-list{
                         margin: 0;
                         border: 1px solid #DEE2E7;
@@ -210,19 +253,37 @@
                             cursor: pointer;
                             display: flex;
                             position: relative;
+                            align-items: center;
+
+                                .checkBox{
+                                    width: 18px;
+                                    height: 18px;
+                                    // position: absolute;
+                                    // left: 3%;
+                                    // top: 50%;
+                                    // transform: translate(0, -50%);
+                                }
 
                                 p{
+                                    margin-left: 15px;
                                     margin-right: 10px;
                                 }
                                 .arrow-right{
                                     width: 7px;
                                     height: 10px;
-                                    position: absolute;
-                                    right: 3%;
-                                    top: 50%;
-                                }                     
+                                    // position: absolute;
+                                    // right: 3%;
+                                    // top: 50%;
+                                    // transform: translate(0, -50%);
+                                }                  
                         }
-                    }             
+                    }
+                    .tableListItemSelected{
+                        background-color: #162133;
+                        p{
+                            color: #F3F5F7;
+                        }
+                    }            
                 }
             }
         }
