@@ -1,6 +1,6 @@
 <template>
     <div class="title">Менеджер</div>
-    <div class="modals"></div>
+    <div class="table" v-for="(part, key) in rootPermission" :key="key">{{part}}</div>
     <button @click="createPermission" class="save-button">Сохранить</button>
 
 </template>
@@ -12,12 +12,13 @@
         name: 'Home',
         data() {
             return {
-
+                rootPermission: {},
+                rootPermissionTitles: {}
             }
         },
         methods: {
             getTemplates() {
-                API.getTemplates().then(data => console.log(data))
+                API.getTemplates().then(data => {this.rootPermission = data.data.rootPermission, this.rootPermissionTitles = data.data.rootPermissionTitles})
             },
             createPermission() {
                 API.createPermission()
@@ -25,6 +26,10 @@
         },
         mounted() {
             this.getTemplates()
+            setTimeout(() =>  console.log(this.rootPermission), 1000)
+        },
+        watch: {
+
         }
     }
 </script>
@@ -66,7 +71,7 @@
     color: #162133;
 }
 
-.modals{
+.table{
 
 }
 </style>
