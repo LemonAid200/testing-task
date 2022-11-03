@@ -24,8 +24,7 @@
                                     :class="{
                                         tableListItemSelected: key.isSelected && !key.isEndOfBranch
                                     }"
-                                    >
-                                   
+                                    >                                   
                                     <img :src="key.isSelected ? checkedBox : notCheckedBox" 
                                         class="checkBox">   
                                     <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
@@ -82,9 +81,6 @@
             getObjectValueByKeys(keys, obj){
 
                 if (keys.length <= 1) {
-                    // console.log('Объект ',obj)
-                    // console.log('Значения по ключу ',obj[keys[0]])
-
                     return obj[keys[0]]
                 }
                 else {
@@ -94,13 +90,6 @@
                 }            
             },
 
-            isEndOfBranch(list){
-                let obj = this.getObjectValueByKeys(this.selectedKeys, this.rootPermission)
-                // console.log(list)
-                return Object.keys(obj).length > 0
-
-            },
-            
             handleItemClick(index, key){
                 if (this.selectedKeys.length <= index + 1 || (this.selectedKeys[index] != key.name)){
                     this.selectedKeys = this.selectedKeys.slice(0, index)
@@ -122,8 +111,6 @@
 
                     }
                     this.rootToDisplay.push(objToPush)
-                    // console.log(this.rootToDisplay)
-                    
                 }
 
                 for (let i in this.rootToDisplay[index]){
@@ -135,9 +122,6 @@
                         this.rootToDisplay[index][i].isSelected = true
                     }
                 }
-
-                
-                
             },
         },
 
@@ -196,6 +180,7 @@
                 line-height: 24px;
                 color: #3391F5;
                 margin: 24px 0;
+                cursor: pointer
             }
             .save-button{
                 color: #FFFFFF;
