@@ -22,7 +22,7 @@
                                     :key="key"
                                     class="table-list-item"
                                     :class="{
-                                        tableListItemSelected: key.isSelected && isEndOfBranch(key)
+                                        tableListItemSelected: key.isSelected && !key.isEndOfBranch
                                     }"
                                     >
                                    
@@ -82,6 +82,9 @@
             getObjectValueByKeys(keys, obj){
 
                 if (keys.length <= 1) {
+                    // console.log('Объект ',obj)
+                    // console.log('Значения по ключу ',obj[keys[0]])
+
                     return obj[keys[0]]
                 }
                 else {
@@ -91,12 +94,10 @@
                 }            
             },
 
-            isEndOfBranch(key){
+            isEndOfBranch(list){
                 let obj = this.getObjectValueByKeys(this.selectedKeys, this.rootPermission)
-                console.log(Object.keys(obj))
-                console.log(key)
-
-                return Object.keys(obj).length > 0 
+                // console.log(list)
+                return Object.keys(obj).length > 0
 
             },
             
@@ -113,8 +114,15 @@
                     for (let name in rootObj){
                         objToPush[name] = { name: name, isSelected: false }
                     }
+                    if (rootObj === 0){
+                        for (let name in this.rootToDisplay[this.rootToDisplay.length - 1]){
+                            this.rootToDisplay[this.rootToDisplay.length - 1][name].isEndOfBranch = true
+                        }
+                        console.log('Вывод', this.rootToDisplay[this.rootToDisplay.length - 1])
+
+                    }
                     this.rootToDisplay.push(objToPush)
-                    
+                    // console.log(this.rootToDisplay)
                     
                 }
 
@@ -134,16 +142,12 @@
         },
 
         watch: {
-            selectedKeys(){
-                // console.log(this.selectedKeys)
-            }
+
         },
 
         mounted() {
             this.getTemplates()
-            // setTimeout(() =>  console.log(this.rootPermission), 1000)
-            // setTimeout(() =>  console.log(this.rootPermissionTitles['part1'].title), 1000)
-
+            
         },
         computed: {
             titlesToDisplay(){
