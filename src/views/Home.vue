@@ -59,6 +59,7 @@
                 rootPermission: {},
                 rootPermissionTitles: {},
                 rootToDisplay: [],
+                titlesToDisplay: [],
                 selectedKeys: []
             }
         },
@@ -67,6 +68,7 @@
                 API.getTemplates().then(data => {
                     this.rootPermission = data.data.rootPermission
                     this.rootPermissionTitles = data.data.rootPermissionTitles
+                    // console.log(this.rootPermissionTitles)
                     let obj = {}
                     for (let name in data.data.rootPermission){
                         obj[name] = { name: name, isSelected: false }
@@ -107,14 +109,11 @@
                         for (let name in this.rootToDisplay[this.rootToDisplay.length - 1]){
                             this.rootToDisplay[this.rootToDisplay.length - 1][name].isEndOfBranch = true
                         }
-                        console.log('Вывод', this.rootToDisplay[this.rootToDisplay.length - 1])
-
                     }
                     this.rootToDisplay.push(objToPush)
                 }
 
                 for (let i in this.rootToDisplay[index]){
-
                     if ( this.rootToDisplay[index][i].name != key.name ){
                             this.rootToDisplay[index][i].isSelected = false
                         }
@@ -122,7 +121,16 @@
                         this.rootToDisplay[index][i].isSelected = true
                     }
                 }
+
+                
+                this.titlesToDisplay = this.fillTitlesToDisplay(this.selectedKeys, this.rootPermissionTitles)
             },
+
+            fillTitlesToDisplay(arrayKeys, root, result = []){
+                if (arrayKeys.length === 0 || !root || !root[arrayKeys[0]]) return result
+                result.push(root[arrayKeys[0]].title)
+                return this.fillTitlesToDisplay(arrayKeys.slice(1), root[arrayKeys[0]].items, result)                
+            }
         },
 
         watch: {
@@ -134,16 +142,6 @@
             
         },
         computed: {
-            titlesToDisplay(){
-                let array = []
-                let i = 0
-                for (let key in this.rootPermissionTitles){
-                    if (i >= this.rootToDisplay.length) return array
-                    array.push(this.rootPermissionTitles[key].title)
-                    i++
-                }
-                return array
-            },
 
         }
     }
@@ -227,6 +225,8 @@
 
                 .table-titles{
                     display: flex;
+                    height: 44px;
+
                     width: 100%;
                     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
 
