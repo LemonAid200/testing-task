@@ -113,8 +113,7 @@
                     this.rootToDisplay.push(objToPush)
                 }
 
-                for (let i in this.rootToDisplay[index]){
-                    
+                for (let i in this.rootToDisplay[index]){                    
                     if ( (this.rootToDisplay[index][i].name != key.name && 
                             !this.rootToDisplay[index][i].isEndOfBranch) || 
                                 (this.rootToDisplay[index][i].isEndOfBranch && this.rootToDisplay[index][i].name === key.name && this.rootToDisplay[index][i].isSelected)){
@@ -123,9 +122,7 @@
                     else if (this.rootToDisplay[index][i].name == key.name){
                         this.rootToDisplay[index][i].isSelected = true
                     }
-                }
-
-                
+                }                
                 this.titlesToDisplay = this.fillTitlesToDisplay(this.selectedKeys, this.rootPermissionTitles)
             },
 
@@ -134,10 +131,6 @@
                 result.push(root[arrayKeys[0]].title)
                 return this.fillTitlesToDisplay(arrayKeys.slice(1), root[arrayKeys[0]].items, result)                
             }
-        },
-
-        watch: {
-
         },
 
         mounted() {
