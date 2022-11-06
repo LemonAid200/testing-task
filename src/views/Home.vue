@@ -114,8 +114,11 @@
                 }
 
                 for (let i in this.rootToDisplay[index]){
-                    if ( this.rootToDisplay[index][i].name != key.name ){
-                            this.rootToDisplay[index][i].isSelected = false
+                    
+                    if ( (this.rootToDisplay[index][i].name != key.name && 
+                            !this.rootToDisplay[index][i].isEndOfBranch) || 
+                                (this.rootToDisplay[index][i].isEndOfBranch && this.rootToDisplay[index][i].name === key.name && this.rootToDisplay[index][i].isSelected)){
+                                this.rootToDisplay[index][i].isSelected = false
                         }
                     else if (this.rootToDisplay[index][i].name == key.name){
                         this.rootToDisplay[index][i].isSelected = true
