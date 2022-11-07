@@ -68,7 +68,7 @@
                 API.getTemplates().then(data => {
                     this.rootPermission = data.data.rootPermission
                     this.rootPermissionTitles = data.data.rootPermissionTitles
-                    // console.log(this.rootPermissionTitles)
+                    console.log(this.rootPermission)
                     let obj = {}
                     for (let name in data.data.rootPermission){
                         obj[name] = { name: name, isSelected: false }
@@ -114,9 +114,9 @@
                 }
 
                 for (let i in this.rootToDisplay[index]){                    
-                    if ( (this.rootToDisplay[index][i].name != key.name && 
+                    if ((this.rootToDisplay[index][i].name != key.name && 
                             !this.rootToDisplay[index][i].isEndOfBranch) || 
-                                (this.rootToDisplay[index][i].isEndOfBranch && this.rootToDisplay[index][i].name === key.name && this.rootToDisplay[index][i].isSelected)){
+                             (this.rootToDisplay[index][i].isEndOfBranch && this.rootToDisplay[index][i].name === key.name && this.rootToDisplay[index][i].isSelected)){
                                 this.rootToDisplay[index][i].isSelected = false
                         }
                     else if (this.rootToDisplay[index][i].name == key.name){
@@ -152,7 +152,6 @@
         width: 200px;
         height: 100vh;
         background-color: rgba(14, 17, 23, 1);
-;
     }
 
     .main{
@@ -163,10 +162,8 @@
             margin-top: 71px;
             margin-bottom: 24px;
         }
-
         .main-info{
             padding-left: 25px;
-
             .back{
                 font-style: normal;
                 font-weight: 500;
@@ -225,8 +222,6 @@
 
                     width: 100%;
                     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
-
-                   
                     .table-title{
                         padding-left: 16px;
                         padding-bottom: 9px;
@@ -238,15 +233,12 @@
                         letter-spacing: 0.015em;
                         color: #162133;
                         height: 44px;
-
                     }
                 }
-
                 .table-cards{
                     display: flex;
                     height: 100%;
                     overflow-x: auto;
-
                     .table-list{
                         margin: 0;
                         border: 1px solid #DEE2E7;
