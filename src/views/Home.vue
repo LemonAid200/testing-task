@@ -68,7 +68,7 @@
                 API.getTemplates().then(data => {
                     this.rootPermission = data.data.rootPermission
                     this.rootPermissionTitles = data.data.rootPermissionTitles
-                    console.log(this.rootPermission)
+                    // console.log(this.rootPermission)
                     let obj = {}
                     for (let name in data.data.rootPermission){
                         obj[name] = { name: name, isSelected: false }
@@ -105,7 +105,7 @@
                     for (let name in rootObj){
                         objToPush[name] = { name: name, isSelected: false }
                     }
-                    if (rootObj === 0){
+                    if (rootObj === 0 || rootObj === 1){
                         for (let name in this.rootToDisplay[this.rootToDisplay.length - 1]){
                             this.rootToDisplay[this.rootToDisplay.length - 1][name].isEndOfBranch = true
                         }
@@ -126,6 +126,10 @@
                 this.titlesToDisplay = this.fillTitlesToDisplay(this.selectedKeys, this.rootPermissionTitles)
             },
 
+            // togglePermission(keysArray, obj, newState){
+
+            // },
+
             fillTitlesToDisplay(arrayKeys, root, result = []){
                 if (arrayKeys.length === 0 || !root || !root[arrayKeys[0]]) return result
                 result.push(root[arrayKeys[0]].title)
@@ -134,8 +138,7 @@
         },
 
         mounted() {
-            this.getTemplates()
-            
+            this.getTemplates()            
         },
         computed: {
 
