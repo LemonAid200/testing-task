@@ -13,8 +13,10 @@
     "@babel/core": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
     "core-js": "^3.6.5",
+    "custom-vue-scrollbar": "^0.0.7",
     "overlayscrollbars": "^1.13.1",
     "vue": "^3.0.0",
+    "vue-custom-scrollbar": "^1.4.4",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

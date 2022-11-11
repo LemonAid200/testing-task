@@ -12,25 +12,27 @@
                             :key="index" class="table-title">{{elem}}
                          </div>
                     </div>
-                   
-                    <div class="table-cards">
-                        <div v-for="(list, index) in rootToDisplay" 
-                            :key="index" class="table-list"
-                            >
-                                <div v-for="key in list" 
-                                    @click="handleItemClick(index, key)"
-                                    :key="key"
-                                    class="table-list-item"
-                                    :class="{
-                                        tableListItemSelected: key.isSelected && !key.isEndOfBranch
-                                    }"
-                                    >                                   
-                                    <img :src="key.isSelected ? checkedBox : notCheckedBox" 
-                                        class="checkBox">   
-                                    <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
-                                </div>
+                   <vue-custom-scrollbar :direction="horizontal">
+                        <div class="table-cards">
+                            <div v-for="(list, index) in rootToDisplay" 
+                                :key="index" class="table-list"
+                                >
+                                    <div v-for="key in list" 
+                                        @click="handleItemClick(index, key)"
+                                        :key="key"
+                                        class="table-list-item"
+                                        :class="{
+                                            tableListItemSelected: key.isSelected && !key.isEndOfBranch
+                                        }"
+                                        >                                   
+                                        <img :src="key.isSelected ? checkedBox : notCheckedBox" 
+                                            class="checkBox">   
+                                        <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
+                                    </div>
+                            </div>
                         </div>
-                    </div>
+                   </vue-custom-scrollbar>
+                    
                 </div>
                 <button @click="createPermission" class="save-button">Сохранить</button>
             </div>
@@ -43,10 +45,16 @@
 
 <script>
     import API from "@/api/api";
+    import vueCustomScrollbar from 'custom-vue-scrollbar'
+    import "custom-vue-scrollbar/dist/style.css"
+    // const vueCustomScrollbar = require('vue-custom-scrollbar')
+
+
 
     export default {
         name: 'Home',
         components:{
+            vueCustomScrollbar
         },
         data() {
             return {
@@ -60,7 +68,12 @@
                 rootPermissionTitles: {},
                 rootToDisplay: [],
                 titlesToDisplay: [],
-                selectedKeys: []
+                selectedKeys: [],
+                settings: {
+                    suppressScrollY: false,
+                    suppressScrollX: false,
+                    wheelPropagation: false
+                }
             }
         },
         methods: {
@@ -77,7 +90,7 @@
                 })
             },
             createPermission() {
-                API.createPermission()
+                API.createPermission(this.rootPermission)
             },
 
             getObjectValueByKeys(keys, obj){
@@ -103,11 +116,19 @@
                     rootObj = this.getObjectValueByKeys(this.selectedKeys, this.rootPermission)
                     
                     for (let name in rootObj){
-                        objToPush[name] = { name: name, isSelected: false }
+                        if (rootObj[name] === 1){
+                            objToPush[name] = { name: name, isSelected: true, isEndOfBranch: true }
+                        } else {
+                            objToPush[name] = { name: name, isSelected: false }
+                        }
                     }
+
+
                     if (rootObj === 0 || rootObj === 1){
+                        let permission = rootObj === 0 ? 1 : 0
+                        this.togglePermission(this.selectedKeys, this.rootPermission, permission) 
                         for (let name in this.rootToDisplay[this.rootToDisplay.length - 1]){
-                            this.rootToDisplay[this.rootToDisplay.length - 1][name].isEndOfBranch = true
+                            this.rootToDisplay[this.rootToDisplay.length - 1][name].isEndOfBranch = true                    
                         }
                     }
                     this.rootToDisplay.push(objToPush)
@@ -126,9 +147,14 @@
                 this.titlesToDisplay = this.fillTitlesToDisplay(this.selectedKeys, this.rootPermissionTitles)
             },
 
-            // togglePermission(keysArray, obj, newState){
-
-            // },
+            togglePermission(keys, obj, newState){
+                if (keys.length === 1){
+                    obj[keys[0]] = newState
+                    // console.log(this.rootPermission)
+                    return
+                }
+                return this.togglePermission(keys.slice(1), obj[keys[0]], newState)
+            },
 
             fillTitlesToDisplay(arrayKeys, root, result = []){
                 if (arrayKeys.length === 0 || !root || !root[arrayKeys[0]]) return result
@@ -240,8 +266,7 @@
                 }
                 .table-cards{
                     display: flex;
-                    height: 100%;
-                    overflow-x: auto;
+                    min-height: 200px;
                     .table-list{
                         margin: 0;
                         border: 1px solid #DEE2E7;
