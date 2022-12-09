@@ -1,18 +1,19 @@
 <template>
     <div class="wrapper">
-        <div class="sidebar"></div>
+        <div v-show="isShowSideBar" class="sidebar"></div>
         <div class="main">
             <div class="line"></div>
             <div class="main-info">
                 <div class="back"><img :src="arrowLeftBlue" /> Назад</div>
                 <div class="title">Менеджер</div>
                 <div class="table">
-                    <div class="table-titles">
-                        <div v-for="(elem, index) in titlesToDisplay" 
-                            :key="index" class="table-title">{{elem}}
-                         </div>
-                    </div>
+                   
                    <vue-custom-scrollbar :direction="horizontal">
+                        <div class="table-titles">
+                            <div v-for="(elem, index) in titlesToDisplay" 
+                                :key="index" class="table-title">{{elem}}
+                            </div>
+                        </div>
                         <div class="table-cards">
                             <div v-for="(list, index) in rootToDisplay" 
                                 :key="index" class="table-list"
@@ -27,7 +28,7 @@
                                         >                                   
                                         <img :src="key.isSelected ? checkedBox : notCheckedBox" 
                                             class="checkBox">   
-                                        <p>{{key.name}}</p> <img :src="arrowRightGrey" class="arrow-right">                         
+                                        <p>{{key.name}}</p> <img v-if="!key.isEndOfBranch" :src="arrowRightGrey" class="arrow-right">                        
                                     </div>
                             </div>
                         </div>
@@ -47,9 +48,6 @@
     import API from "@/api/api";
     import vueCustomScrollbar from 'custom-vue-scrollbar'
     import "custom-vue-scrollbar/dist/style.css"
-    // const vueCustomScrollbar = require('vue-custom-scrollbar')
-
-
 
     export default {
         name: 'Home',
@@ -73,7 +71,9 @@
                     suppressScrollY: false,
                     suppressScrollX: false,
                     wheelPropagation: false
-                }
+                },
+
+                isShowSideBar: true
             }
         },
         methods: {
@@ -81,7 +81,6 @@
                 API.getTemplates().then(data => {
                     this.rootPermission = data.data.rootPermission
                     this.rootPermissionTitles = data.data.rootPermissionTitles
-                    // console.log(this.rootPermission)
                     let obj = {}
                     for (let name in data.data.rootPermission){
                         obj[name] = { name: name, isSelected: false }
@@ -150,7 +149,6 @@
             togglePermission(keys, obj, newState){
                 if (keys.length === 1){
                     obj[keys[0]] = newState
-                    // console.log(this.rootPermission)
                     return
                 }
                 return this.togglePermission(keys.slice(1), obj[keys[0]], newState)
@@ -160,11 +158,20 @@
                 if (arrayKeys.length === 0 || !root || !root[arrayKeys[0]]) return result
                 result.push(root[arrayKeys[0]].title)
                 return this.fillTitlesToDisplay(arrayKeys.slice(1), root[arrayKeys[0]].items, result)                
+            },
+
+            hideShowSidebar(){
+                if (window.innerWidth >= 768){ this.isShowSideBar = true }
+                else{ this.isShowSideBar = false }
+                window.titlesToDisplay = this.titlesToDisplay
             }
         },
 
         mounted() {
-            this.getTemplates()            
+            this.getTemplates()   
+            this.hideShowSidebar()
+            window.addEventListener('resize', this.hideShowSidebar)
+            
         },
         computed: {
 
@@ -180,11 +187,13 @@
     .sidebar{
         width: 200px;
         height: 100vh;
+        flex-shrink: 0;
         background-color: rgba(14, 17, 23, 1);
     }
 
     .main{
         width: 100%;
+        height: 100vh;
         .line{
             width: 100%;
             border: 1px solid #DEE2E7;
@@ -193,6 +202,7 @@
         }
         .main-info{
             padding-left: 25px;
+            padding-right: 25px;
             .back{
                 font-style: normal;
                 font-weight: 500;
