@@ -182,14 +182,10 @@
 
             getSetTitlesWidth(){
                 let tableListsWidths = this.$refs.tableList.map(item => item.clientWidth)
-                console.log('Hello there')
-                console.log(tableListsWidths)
-                let titleWidths = this.$refs.titles[0]
-                console.log(titleWidths)
                
-               
-                for (let i = 0; i < this.$refs.titles.length; i++){
-                    this.$refs.titles[i].style.width = tableListsWidths[i] + 'px'                    
+               let amountOfTitles = this.$refs.titles ? this.$refs.titles.length : 0
+                for (let i = 0; i < amountOfTitles; i++){
+                    this.$refs.titles[i].style.width = tableListsWidths[i] + 'px'                  
                 }
                 
             }
@@ -199,7 +195,7 @@
             this.getTemplates()   
             this.hideShowSidebar()
             window.addEventListener('resize', this.hideShowSidebar)
-            setTimeout(this.initiateTestingState, 0)
+            setTimeout(this.initiateTestingState, 1)
             setTimeout(this.getSetTitlesWidth, 50)            
         },
         beforeUnmount(){
