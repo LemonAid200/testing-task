@@ -11,13 +11,12 @@
                    <vue-custom-scrollbar :direction="horizontal">
                         <div class="table-titles">
                             <div v-for="(elem, index) in titlesToDisplay" 
-                                :key="index" class="table-title">{{elem}}
+                                :key="index" ref="titles" class="table-title">{{elem}}
                             </div>
                         </div>
                         <div class="table-cards">
-                            <div v-for="(list, index) in rootToDisplay" 
-                                :key="index" class="table-list"
-                                >
+                            <div v-for="(list, index) in rootToDisplay" :key="index"
+                                ref="tableList" class="table-list">
                                     <div v-for="key in list" 
                                         @click="handleItemClick(index, key)"
                                         :key="key"
@@ -72,7 +71,6 @@
                     suppressScrollX: false,
                     wheelPropagation: false
                 },
-
                 isShowSideBar: true
             }
         },
@@ -117,6 +115,8 @@
                     for (let name in rootObj){
                         if (rootObj[name] === 1){
                             objToPush[name] = { name: name, isSelected: true, isEndOfBranch: true }
+                        } else if (rootObj[name] === 0){
+                            objToPush[name] = { name: name, isSelected: false, isEndOfBranch: true }
                         } else {
                             objToPush[name] = { name: name, isSelected: false }
                         }
@@ -144,6 +144,7 @@
                     }
                 }                
                 this.titlesToDisplay = this.fillTitlesToDisplay(this.selectedKeys, this.rootPermissionTitles)
+                this.getSetTitlesWidth()
             },
 
             togglePermission(keys, obj, newState){
@@ -164,6 +165,33 @@
                 if (window.innerWidth >= 768){ this.isShowSideBar = true }
                 else{ this.isShowSideBar = false }
                 window.titlesToDisplay = this.titlesToDisplay
+            },
+
+            initiateTestingState(){
+                let clicks = [
+                    {index: 0, item: {name: 'part1', isSelected: false }},
+                    {index: 1, item: {name: 'part11', isSelected: false }},
+                    {index: 2, item: {name: 'part111', isSelected: false }},
+                    {index: 3, item: {name: 'part1111', isSelected: false }},
+                    {index: 4, item: {name: 'part11111', isSelected: false }},
+                    {index: 5, item: {name: 'action', isSelected: false }},
+                    {index: 6, item: {name: 'action2', isSelected: false }},
+                ]
+                clicks.forEach(click => this.handleItemClick(click.index, click.item))
+            },
+
+            getSetTitlesWidth(){
+                let tableListsWidths = this.$refs.tableList.map(item => item.clientWidth)
+                console.log('Hello there')
+                console.log(tableListsWidths)
+                let titleWidths = this.$refs.titles[0]
+                console.log(titleWidths)
+               
+               
+                for (let i = 0; i < this.$refs.titles.length; i++){
+                    this.$refs.titles[i].style.width = tableListsWidths[i] + 'px'                    
+                }
+                
             }
         },
 
@@ -171,7 +199,11 @@
             this.getTemplates()   
             this.hideShowSidebar()
             window.addEventListener('resize', this.hideShowSidebar)
-            
+            setTimeout(this.initiateTestingState, 0)
+            setTimeout(this.getSetTitlesWidth, 50)            
+        },
+        beforeUnmount(){
+            window.removeEventListener('resize', this.hideShowSidebar)            
         },
         computed: {
 
@@ -258,11 +290,10 @@
                 .table-titles{
                     display: flex;
                     height: 44px;
-
                     width: 100%;
                     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
                     .table-title{
-                        padding-left: 16px;
+                        padding-left: 5px;
                         padding-bottom: 9px;
                         font-style: normal;
                         font-weight: 700;
@@ -277,10 +308,11 @@
                 .table-cards{
                     display: flex;
                     min-height: 200px;
+                    padding-bottom: 15px;
                     .table-list{
                         margin: 0;
                         border: 1px solid #DEE2E7;
-                        height: 90%;
+                        // height: 90%;
 
                         .table-list-item{
                             font-style: normal;
@@ -290,7 +322,7 @@
                             color: #162133;
                             height: 36px;
                             padding-left: 12px;
-                            padding-right: 6px;
+                            padding-right: 20px;
                             cursor: pointer;
                             display: flex;
                             position: relative;
@@ -312,10 +344,10 @@
                                 .arrow-right{
                                     width: 7px;
                                     height: 10px;
-                                    // position: absolute;
-                                    // right: 3%;
-                                    // top: 50%;
-                                    // transform: translate(0, -50%);
+                                    position: absolute;
+                                    right: 5px;
+                                    top: 50%;
+                                    transform: translateY(-50%);
                                 }                  
                         }
                     }
